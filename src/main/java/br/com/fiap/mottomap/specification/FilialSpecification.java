@@ -27,7 +27,7 @@ public class FilialSpecification {
             }
 
             if (filter.capacidadeMin() != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get("capacidadeMinima"), filter.capacidadeMin()));
+                predicates.add(cb.greaterThanOrEqualTo(root.get("capacidadeMaxima"), filter.capacidadeMin()));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
