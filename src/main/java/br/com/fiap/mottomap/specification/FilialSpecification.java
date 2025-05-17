@@ -15,7 +15,7 @@ public class FilialSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             if(filter.nome() != null){
-                predicates.add(cb.equal(root.get("nome"), filter.nome()));
+                predicates.add(cb.like(cb.lower(root.get("nome")), "%" + filter.nome().toLowerCase() + "%"));
             }
 
             if(filter.cidade() != null){
