@@ -5,8 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+import br.com.fiap.mottomap.model.CargoUsuario;
 import br.com.fiap.mottomap.model.Filial;
+import br.com.fiap.mottomap.model.Usuario;
 import br.com.fiap.mottomap.repository.FilialRepository;
+import br.com.fiap.mottomap.repository.UsuarioRepository;
 import jakarta.annotation.PostConstruct;
 
 @Configuration
@@ -14,6 +17,9 @@ public class DatabaseSeeder {
     
     @Autowired
     FilialRepository filialRepository;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     @PostConstruct
     public void init(){
@@ -70,5 +76,45 @@ public class DatabaseSeeder {
         );
 
         filialRepository.saveAll(filiais);
+
+        var usuarios = List.of(
+            Usuario.builder()
+                .nome("Cauã Aragão")
+                .email("aragao@mottomap.com")
+                .senha("caua12345")
+                .cargoUsuario(CargoUsuario.COL_MECANICO)
+                .filial(filiais.get(0))
+                .build(),
+            Usuario.builder()
+                .nome("Gustavo Oliveira")
+                .email("gustavo@mottomap.com")
+                .senha("gustavo12345")
+                .cargoUsuario(CargoUsuario.ADM_GERAL)
+                .filial(filiais.get(1))
+                .build(),
+            Usuario.builder()
+                .nome("Pedro Felix")
+                .email("p.felix@mottomap.com")
+                .senha("pedrito12345")
+                .cargoUsuario(CargoUsuario.COL_PATIO)
+                .filial(filiais.get(2))
+                .build(),
+            Usuario.builder()
+                .nome("Pedro Barbosa")
+                .email("p.barbosa@mottomap.com")
+                .senha("barbosa12345")
+                .cargoUsuario(CargoUsuario.ADM_LOCAL)
+                .filial(filiais.get(3))
+                .build(),
+            Usuario.builder()
+                .nome("Mateus Estevam")
+                .email("mafeus@mottomap.com")
+                .senha("mateus12345")
+                .cargoUsuario(CargoUsuario.COL_MECANICO)
+                .filial(filiais.get(4))
+                .build()
+        );
+
+        usuarioRepository.saveAll(usuarios);
     }
 }
