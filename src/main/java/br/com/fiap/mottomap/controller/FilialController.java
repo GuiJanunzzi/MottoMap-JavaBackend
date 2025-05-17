@@ -24,11 +24,15 @@ import br.com.fiap.mottomap.model.Filial;
 import br.com.fiap.mottomap.model.FilialFilter;
 import br.com.fiap.mottomap.repository.FilialRepository;
 import br.com.fiap.mottomap.specification.FilialSpecification;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/filial")
 @CrossOrigin
+@Tag(name = "Filial", description = "API para gerenciamento de filiais da Mottu")
 public class FilialController {
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -36,6 +40,15 @@ public class FilialController {
     @Autowired
     private FilialRepository repository;
 
+    //----- Documentação Swagger -----
+    @Operation(
+        summary = "Listar todas as Filiais",
+        description = "Retorna uma lista com todas as filiais cadastradas no sistema",
+        responses = {
+                @ApiResponse(responseCode = "200", description = "Lista de filiais retornada com sucesso")
+        }
+    )
+    //----- Documentação Swagger -----
     @GetMapping
     public Page<Filial> index(FilialFilter filter, @PageableDefault(size = 5) Pageable pageable){
 
@@ -43,6 +56,16 @@ public class FilialController {
         return repository.findAll(specification, pageable);
     }
 
+    //----- Documentação Swagger -----
+    @Operation(
+        summary = "Cadastrar Filial",
+        description = "Coleta os dados para adicionar uma filial no sistema",
+        responses = {
+                @ApiResponse(responseCode = "201", description = "Filial cadastrada com sucesso"),
+                @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+        }
+    )
+    //----- Documentação Swagger -----
     @PostMapping
     public ResponseEntity<Filial> create(@RequestBody @Valid Filial filial){
         log.info("Cadastrando Filial");
@@ -50,12 +73,33 @@ public class FilialController {
         return ResponseEntity.status(201).body(filial);
     }
 
+    //----- Documentação Swagger -----
+    @Operation(
+        summary = "Buscar Filial por ID",
+        description = "Retorna os dados de uma filial com base no ID fornecido",
+        responses = {
+                @ApiResponse(responseCode = "200", description = "Filial encontrada"),
+                @ApiResponse(responseCode = "404", description = "Filial não encontrada")
+        }
+    )
+    //----- Documentação Swagger -----
     @GetMapping({"/{id}"})
     public Filial get(@PathVariable Long id){
         log.info("Buscando filial por ID: " + id);
         return getFilial(id);
     }
 
+    //----- Documentação Swagger -----
+    @Operation(
+        summary = "Atualizar Filial",
+        description = "Atualiza os dados de uma filial existente com base no ID fornecido",
+        responses = {
+                @ApiResponse(responseCode = "200", description = "Filial atualizada com sucesso"),
+                @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
+                @ApiResponse(responseCode = "404", description = "Filial não encontrada")
+        }
+    )
+    //----- Documentação Swagger -----
     @PutMapping({"/{id}"})
     public Filial update(@PathVariable Long id, @RequestBody @Valid Filial filial){
         log.info("Atualizando filial " + filial.toString());
@@ -67,6 +111,16 @@ public class FilialController {
         return filial;
     }
 
+    //----- Documentação Swagger -----
+    @Operation(
+        summary = "Deletar Filial",
+        description = "Remove uma Filial existente com base no ID fornecido",
+        responses = {
+                @ApiResponse(responseCode = "204", description = "Filial removida com sucesso"),
+                @ApiResponse(responseCode = "404", description = "Filial não encontrada")
+        }
+    )
+    //----- Documentação Swagger -----
     @DeleteMapping({"/{id}"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
