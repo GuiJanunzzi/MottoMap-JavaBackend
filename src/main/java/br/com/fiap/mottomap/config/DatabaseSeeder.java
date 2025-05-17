@@ -5,10 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+import br.com.fiap.mottomap.model.Area;
 import br.com.fiap.mottomap.model.CargoUsuario;
 import br.com.fiap.mottomap.model.Filial;
+import br.com.fiap.mottomap.model.PosicaoPatio;
 import br.com.fiap.mottomap.model.Usuario;
 import br.com.fiap.mottomap.repository.FilialRepository;
+import br.com.fiap.mottomap.repository.PosicaoPatioRepository;
 import br.com.fiap.mottomap.repository.UsuarioRepository;
 import jakarta.annotation.PostConstruct;
 
@@ -20,6 +23,9 @@ public class DatabaseSeeder {
 
     @Autowired
     UsuarioRepository usuarioRepository;
+
+    @Autowired
+    PosicaoPatioRepository posicaoPatioRepository;
 
     @PostConstruct
     public void init(){
@@ -116,5 +122,50 @@ public class DatabaseSeeder {
         );
 
         usuarioRepository.saveAll(usuarios);
+
+        var posicoes = List.of(
+            PosicaoPatio.builder()
+                .identificacao("A1")
+                .numeroLinha(1)
+                .numeroColuna(1)
+                .area(Area.MINHA_MOTTU)
+                .ocupado(true)
+                .filial(filiais.get(0))
+                .build(),
+            PosicaoPatio.builder()
+                .identificacao("B1")
+                .numeroLinha(2)
+                .numeroColuna(1)
+                .area(Area.PRONTAS)
+                .ocupado(false)
+                .filial(filiais.get(0))
+                .build(),
+            PosicaoPatio.builder()
+                .identificacao("C1")
+                .numeroLinha(3)
+                .numeroColuna(1)
+                .area(Area.PROBLEMAS_SIMPLES)
+                .ocupado(true)
+                .filial(filiais.get(0))
+                .build(),
+            PosicaoPatio.builder()
+                .identificacao("D2")
+                .numeroLinha(4)
+                .numeroColuna(2)
+                .area(Area.PROBLEMAS_GRAVES)
+                .ocupado(false)
+                .filial(filiais.get(1))
+                .build(),
+            PosicaoPatio.builder()
+                .identificacao("E3")
+                .numeroLinha(5)
+                .numeroColuna(3)
+                .area(Area.IRRECUPERAVEIS)
+                .ocupado(false)
+                .filial(filiais.get(1))
+                .build()
+        );
+
+        posicaoPatioRepository.saveAll(posicoes);
     }
 }
