@@ -1,3 +1,5 @@
+package br.com.fiap.mottomap.exception;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
