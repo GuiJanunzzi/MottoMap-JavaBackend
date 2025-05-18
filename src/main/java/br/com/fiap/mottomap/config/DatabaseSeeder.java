@@ -8,9 +8,13 @@ import org.springframework.context.annotation.Configuration;
 import br.com.fiap.mottomap.model.Area;
 import br.com.fiap.mottomap.model.CargoUsuario;
 import br.com.fiap.mottomap.model.Filial;
+import br.com.fiap.mottomap.model.ModeloMoto;
+import br.com.fiap.mottomap.model.Moto;
 import br.com.fiap.mottomap.model.PosicaoPatio;
+import br.com.fiap.mottomap.model.StatusMoto;
 import br.com.fiap.mottomap.model.Usuario;
 import br.com.fiap.mottomap.repository.FilialRepository;
+import br.com.fiap.mottomap.repository.MotoRepository;
 import br.com.fiap.mottomap.repository.PosicaoPatioRepository;
 import br.com.fiap.mottomap.repository.UsuarioRepository;
 import jakarta.annotation.PostConstruct;
@@ -26,6 +30,9 @@ public class DatabaseSeeder {
 
     @Autowired
     PosicaoPatioRepository posicaoPatioRepository;
+
+    @Autowired
+    MotoRepository motoRepository;
 
     @PostConstruct
     public void init(){
@@ -167,5 +174,50 @@ public class DatabaseSeeder {
         );
 
         posicaoPatioRepository.saveAll(posicoes);
+
+        var motos = List.of(
+            Moto.builder()
+                .placa("QRA2J58")
+                .chassi("9C2KC0810KR302457")
+                .modeloMoto(ModeloMoto.POP_110I)
+                .ano(2024)
+                .statusMoto(StatusMoto.ATIVA)
+                .filial(filiais.get(0))
+                .build(),
+            Moto.builder()
+                .placa("DVL9B31")
+                .chassi("93HPCF520PJ000879")
+                .modeloMoto(ModeloMoto.MOTTU_SPORT)
+                .ano(2023)
+                .statusMoto(StatusMoto.INATIVA)
+                .filial(filiais.get(1))
+                .build(),
+            Moto.builder()
+                .placa("GRK7H02")
+                .chassi("9CDZD1500MM001234")
+                .modeloMoto(ModeloMoto.MOTTU_SPORT_ESD)
+                .ano(2025)
+                .statusMoto(StatusMoto.ATIVA)
+                .filial(filiais.get(2))
+                .build(),
+            Moto.builder()
+                .placa("JKU3C77")
+                .chassi("3C3B2F47XKT900321")
+                .modeloMoto(ModeloMoto.MOTTU_E_MAX)
+                .ano(2025)
+                .statusMoto(StatusMoto.ATIVA)
+                .filial(filiais.get(3))
+                .build(),
+            Moto.builder()
+                .placa("LZV4M66")
+                .chassi("9BWPX1100N1003456")
+                .modeloMoto(ModeloMoto.POP_110I)
+                .ano(2022)
+                .statusMoto(StatusMoto.INATIVA)
+                .filial(filiais.get(4))
+                .build()
+        );
+
+        motoRepository.saveAll(motos);
     }
 }
