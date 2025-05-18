@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import br.com.fiap.mottomap.filter.FilialFilter;
 import br.com.fiap.mottomap.model.Filial;
-import br.com.fiap.mottomap.model.FilialFilter;
 import jakarta.persistence.criteria.Predicate;
 
 public class FilialSpecification {

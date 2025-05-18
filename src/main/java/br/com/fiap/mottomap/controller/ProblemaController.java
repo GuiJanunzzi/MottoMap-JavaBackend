@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.mottomap.dto.ProblemaRequestDto;
+import br.com.fiap.mottomap.filter.ProblemaFilter;
 import br.com.fiap.mottomap.model.Moto;
 import br.com.fiap.mottomap.model.Problema;
-import br.com.fiap.mottomap.model.ProblemaFilter;
 import br.com.fiap.mottomap.model.Usuario;
 import br.com.fiap.mottomap.repository.MotoRepository;
 import br.com.fiap.mottomap.repository.ProblemaRepository;

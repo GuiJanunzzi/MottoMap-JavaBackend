@@ -1,4 +1,6 @@
-package br.com.fiap.mottomap.model;
+package br.com.fiap.mottomap.filter;
+
+import br.com.fiap.mottomap.model.Area;
 
 public record PosicaoPatioFilter(
     String identificacao,

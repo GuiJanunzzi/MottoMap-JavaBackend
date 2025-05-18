@@ -1,6 +1,8 @@
-package br.com.fiap.mottomap.model;
+package br.com.fiap.mottomap.filter;
 
 import java.time.LocalDate;
+
+import br.com.fiap.mottomap.model.TipoProblema;
 
 public record ProblemaFilter(
     TipoProblema tipoProblema,

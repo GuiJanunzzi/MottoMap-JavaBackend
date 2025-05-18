@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.com.fiap.mottomap.filter.FilialFilter;
 import br.com.fiap.mottomap.model.Filial;
-import br.com.fiap.mottomap.model.FilialFilter;
 import br.com.fiap.mottomap.repository.FilialRepository;
 import br.com.fiap.mottomap.specification.FilialSpecification;
 import io.swagger.v3.oas.annotations.Operation;

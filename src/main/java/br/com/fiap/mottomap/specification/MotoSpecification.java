@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import br.com.fiap.mottomap.filter.MotoFilter;
 import br.com.fiap.mottomap.model.Moto;
-import br.com.fiap.mottomap.model.MotoFilter;
 import jakarta.persistence.criteria.Predicate;
 
 public class MotoSpecification {

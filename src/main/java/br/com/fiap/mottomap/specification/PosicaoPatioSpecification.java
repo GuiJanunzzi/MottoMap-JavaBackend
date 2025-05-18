@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import br.com.fiap.mottomap.filter.PosicaoPatioFilter;
 import br.com.fiap.mottomap.model.PosicaoPatio;
-import br.com.fiap.mottomap.model.PosicaoPatioFilter;
 import jakarta.persistence.criteria.Predicate;
 
 public class PosicaoPatioSpecification {

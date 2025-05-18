@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.mottomap.dto.PosicaoPatioRequestDto;
+import br.com.fiap.mottomap.filter.PosicaoPatioFilter;
 import br.com.fiap.mottomap.model.Filial;
 import br.com.fiap.mottomap.model.PosicaoPatio;
-import br.com.fiap.mottomap.model.PosicaoPatioFilter;
 import br.com.fiap.mottomap.repository.FilialRepository;
 import br.com.fiap.mottomap.repository.PosicaoPatioRepository;
 import br.com.fiap.mottomap.specification.PosicaoPatioSpecification;

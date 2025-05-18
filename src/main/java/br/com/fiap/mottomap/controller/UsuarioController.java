@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.mottomap.dto.UsuarioRequestDto;
+import br.com.fiap.mottomap.filter.UsuarioFilter;
 import br.com.fiap.mottomap.model.Filial;
 import br.com.fiap.mottomap.model.Usuario;
-import br.com.fiap.mottomap.model.UsuarioFilter;
 import br.com.fiap.mottomap.repository.FilialRepository;
 import br.com.fiap.mottomap.repository.UsuarioRepository;
 import br.com.fiap.mottomap.specification.UsuarioSpecification;

@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import br.com.fiap.mottomap.filter.UsuarioFilter;
 import br.com.fiap.mottomap.model.Usuario;
-import br.com.fiap.mottomap.model.UsuarioFilter;
 import jakarta.persistence.criteria.Predicate;
 
 public class UsuarioSpecification {

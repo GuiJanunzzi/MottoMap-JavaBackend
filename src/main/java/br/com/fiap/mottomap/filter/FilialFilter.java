@@ -1,4 +1,4 @@
-package br.com.fiap.mottomap.model;
+package br.com.fiap.mottomap.filter;
 
 public record FilialFilter(
     String nome,
