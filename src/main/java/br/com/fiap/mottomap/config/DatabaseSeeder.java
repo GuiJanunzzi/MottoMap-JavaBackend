@@ -1,5 +1,8 @@
 package br.com.fiap.mottomap.config;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +14,14 @@ import br.com.fiap.mottomap.model.Filial;
 import br.com.fiap.mottomap.model.ModeloMoto;
 import br.com.fiap.mottomap.model.Moto;
 import br.com.fiap.mottomap.model.PosicaoPatio;
+import br.com.fiap.mottomap.model.Problema;
 import br.com.fiap.mottomap.model.StatusMoto;
+import br.com.fiap.mottomap.model.TipoProblema;
 import br.com.fiap.mottomap.model.Usuario;
 import br.com.fiap.mottomap.repository.FilialRepository;
 import br.com.fiap.mottomap.repository.MotoRepository;
 import br.com.fiap.mottomap.repository.PosicaoPatioRepository;
+import br.com.fiap.mottomap.repository.ProblemaRepository;
 import br.com.fiap.mottomap.repository.UsuarioRepository;
 import jakarta.annotation.PostConstruct;
 
@@ -33,6 +39,9 @@ public class DatabaseSeeder {
 
     @Autowired
     MotoRepository motoRepository;
+
+    @Autowired
+    ProblemaRepository problemaRepository;
 
     @PostConstruct
     public void init(){
@@ -98,6 +107,7 @@ public class DatabaseSeeder {
                 .cargoUsuario(CargoUsuario.COL_MECANICO)
                 .filial(filiais.get(0))
                 .build(),
+
             Usuario.builder()
                 .nome("Gustavo Oliveira")
                 .email("gustavo@mottomap.com")
@@ -105,6 +115,7 @@ public class DatabaseSeeder {
                 .cargoUsuario(CargoUsuario.ADM_GERAL)
                 .filial(filiais.get(1))
                 .build(),
+
             Usuario.builder()
                 .nome("Pedro Felix")
                 .email("p.felix@mottomap.com")
@@ -112,6 +123,7 @@ public class DatabaseSeeder {
                 .cargoUsuario(CargoUsuario.COL_PATIO)
                 .filial(filiais.get(2))
                 .build(),
+
             Usuario.builder()
                 .nome("Pedro Barbosa")
                 .email("p.barbosa@mottomap.com")
@@ -119,6 +131,7 @@ public class DatabaseSeeder {
                 .cargoUsuario(CargoUsuario.ADM_LOCAL)
                 .filial(filiais.get(3))
                 .build(),
+
             Usuario.builder()
                 .nome("Mateus Estevam")
                 .email("mafeus@mottomap.com")
@@ -139,6 +152,7 @@ public class DatabaseSeeder {
                 .ocupado(true)
                 .filial(filiais.get(0))
                 .build(),
+
             PosicaoPatio.builder()
                 .identificacao("B1")
                 .numeroLinha(2)
@@ -147,6 +161,7 @@ public class DatabaseSeeder {
                 .ocupado(false)
                 .filial(filiais.get(0))
                 .build(),
+
             PosicaoPatio.builder()
                 .identificacao("C1")
                 .numeroLinha(3)
@@ -155,6 +170,7 @@ public class DatabaseSeeder {
                 .ocupado(true)
                 .filial(filiais.get(0))
                 .build(),
+
             PosicaoPatio.builder()
                 .identificacao("D2")
                 .numeroLinha(4)
@@ -163,6 +179,7 @@ public class DatabaseSeeder {
                 .ocupado(false)
                 .filial(filiais.get(1))
                 .build(),
+
             PosicaoPatio.builder()
                 .identificacao("E3")
                 .numeroLinha(5)
@@ -184,6 +201,7 @@ public class DatabaseSeeder {
                 .statusMoto(StatusMoto.ATIVA)
                 .filial(filiais.get(0))
                 .build(),
+
             Moto.builder()
                 .placa("DVL9B31")
                 .chassi("93HPCF520PJ000879")
@@ -192,6 +210,7 @@ public class DatabaseSeeder {
                 .statusMoto(StatusMoto.INATIVA)
                 .filial(filiais.get(1))
                 .build(),
+
             Moto.builder()
                 .placa("GRK7H02")
                 .chassi("9CDZD1500MM001234")
@@ -200,6 +219,7 @@ public class DatabaseSeeder {
                 .statusMoto(StatusMoto.ATIVA)
                 .filial(filiais.get(2))
                 .build(),
+
             Moto.builder()
                 .placa("JKU3C77")
                 .chassi("3C3B2F47XKT900321")
@@ -208,6 +228,7 @@ public class DatabaseSeeder {
                 .statusMoto(StatusMoto.ATIVA)
                 .filial(filiais.get(3))
                 .build(),
+
             Moto.builder()
                 .placa("LZV4M66")
                 .chassi("9BWPX1100N1003456")
@@ -219,5 +240,54 @@ public class DatabaseSeeder {
         );
 
         motoRepository.saveAll(motos);
+
+        var problemas = List.of(
+            Problema.builder()
+                .tipoProblema(TipoProblema.CARROCERIA)
+                .descricao("Retrovisor quebrado")
+                .dataRegistro(LocalDate.parse("2025-04-27" , DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .resolvido(true)
+                .moto(motos.get(0))
+                .usuario(usuarios.get(0))
+                .build(),
+
+            Problema.builder()
+                .tipoProblema(TipoProblema.MECANICO)
+                .descricao("Problema na suspensão dianteira")
+                .dataRegistro(LocalDate.parse("2025-05-03", DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .resolvido(false)
+                .moto(motos.get(1))
+                .usuario(usuarios.get(1))
+                .build(),
+            
+            Problema.builder()
+                .tipoProblema(TipoProblema.LEGAL)
+                .descricao("Placa faltando")
+                .dataRegistro(LocalDate.parse("2025-05-09", DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .resolvido(false)
+                .moto(motos.get(1))
+                .usuario(usuarios.get(2))
+                .build(),
+            
+            Problema.builder()
+                .tipoProblema(TipoProblema.CARROCERIA)
+                .descricao("Amassado na lateral esquerda")
+                .dataRegistro(LocalDate.parse("2025-05-13", DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .resolvido(false)
+                .moto(motos.get(3))
+                .usuario(usuarios.get(3))
+                .build(),
+                
+            Problema.builder()
+                .tipoProblema(TipoProblema.MECANICO)
+                .descricao("Vazamento de óleo no motor")
+                .dataRegistro(LocalDate.parse("2025-05-17", DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .resolvido(false)
+                .moto(motos.get(4))
+                .usuario(usuarios.get(4))
+                .build()
+        );
+
+        problemaRepository.saveAll(problemas);
     }
 }
