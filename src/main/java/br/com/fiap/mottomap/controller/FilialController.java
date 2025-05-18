@@ -3,6 +3,8 @@ package br.com.fiap.mottomap.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -50,6 +52,7 @@ public class FilialController {
     )
     //----- Documentação Swagger -----
     @GetMapping
+    @Cacheable("filial")
     public Page<Filial> index(FilialFilter filter, @PageableDefault(size = 5) Pageable pageable){
 
         var specification = FilialSpecification.withFilter(filter);
@@ -67,6 +70,7 @@ public class FilialController {
     )
     //----- Documentação Swagger -----
     @PostMapping
+    @CacheEvict(value = "filial", allEntries = true)
     public ResponseEntity<Filial> create(@RequestBody @Valid Filial filial){
         log.info("Cadastrando Filial");
         repository.save(filial);
@@ -101,6 +105,7 @@ public class FilialController {
     )
     //----- Documentação Swagger -----
     @PutMapping({"/{id}"})
+    @CacheEvict(value = "filial", allEntries = true)
     public Filial update(@PathVariable Long id, @RequestBody @Valid Filial filial){
         log.info("Atualizando filial " + filial.toString());
 
@@ -122,6 +127,7 @@ public class FilialController {
     )
     //----- Documentação Swagger -----
     @DeleteMapping({"/{id}"})
+    @CacheEvict(value = "filial", allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         log.info("Apagando Filial ID: " + id);

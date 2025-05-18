@@ -21,48 +21,47 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Entidade que representa um moto no sistema da Mottu")
+@Schema(name = "MotoRequest", description = "DTO para cadastro e atualização de motos")
 public class MotoRequestDto {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "ID único do usuário", example = "1", readOnly = true)
+    @Schema(description = "ID único da moto (gerado automaticamente)", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
     @NotBlank(message = "A placa é obrigatória")
     @Size(min = 7, max = 7, message = "A placa deve conter exatamente 7 caracteres.")
     @Pattern(regexp = "^[A-Z]{3}[0-9]{1}[A-Z0-9]{1}[0-9]{2}$|^[A-Z]{3}[0-9]{4}$", message = "Formato da placa inválido. Exemplo: ABC1D23")
-    @Schema(description = "Placa da moto, com o padrão antigo ou mercosul", example = "DFA9A89", required = true)
+    @Schema(description = "Placa da moto (padrão Mercosul ou antigo)", example = "ABC1D23", pattern = "^[A-Z]{3}[0-9]{1}[A-Z0-9]{1}[0-9]{2}$|^[A-Z]{3}[0-9]{4}$")
     private String placa;
 
     @NotBlank(message = "O chassi é obrigatório")
     @Size(min = 17, max = 17, message = "O chassi deve conter exatamente 17 caracteres.")
     @Pattern(regexp = "^[A-HJ-NPR-Z0-9]{17}$", message = "O chassi possui caracteres inválidos.")
-    @Schema(description = "Chassi da moto", example = "9C2JC4110GR123456", required = true)
+    @Schema(description = "Número do chassi (17 caracteres alfanuméricos)", example = "9BWZZZ377VT004251", pattern = "^[A-HJ-NPR-Z0-9]{17}$")
     private String chassi;
 
     @NotNull(message = "O modelo é obrigatório.")
     @Enumerated(EnumType.STRING)
-    @Schema(description = "Modelo da moto", example = "POP_110I", required = true)
+    @Schema(description = "Modelo da moto", example = "POP_110I", implementation = ModeloMoto.class)
     private ModeloMoto modeloMoto;
 
     @NotNull(message = "O ano é obrigatório")
     @Min(value = 1990, message = "O ano deve ser apartir de 1990")
     @Max(value = 2100, message = "O ano deve ser até 2100")
-    @Schema(description = "Ano de fabricação/modelo da moto", example = "2025", required = true)
+    @Schema(description = "Ano de fabricação (1990-2100)", example = "2023", minimum = "1990", maximum = "2100")
     private Integer ano;
 
     @NotNull(message = "O status é obrigatório.")
     @Enumerated(EnumType.STRING)
-    @Schema(description = "Status da moto(ATIVA/INATIVA)", example = "ATIVA", required = true)
+    @Schema(description = "Status atual da moto", example = "ATIVA", implementation = StatusMoto.class)
     private StatusMoto statusMoto;
     
     @NotNull(message = "O ID da filial é obrigatório")
     @Positive(message = "O ID não pode ser zero ou negativo")
-    @Schema(description = "ID da filial a qual a moto pertence", example = "1", required = true)
+    @Schema(description = "ID da filial onde a moto está alocada", example = "1", minimum = "1")
     private Long filial;
 }

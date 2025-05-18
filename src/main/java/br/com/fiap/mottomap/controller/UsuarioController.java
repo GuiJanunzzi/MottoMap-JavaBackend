@@ -3,6 +3,8 @@ package br.com.fiap.mottomap.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -56,6 +58,7 @@ public class UsuarioController {
     )
     //----- Documentação Swagger -----
     @GetMapping
+    @Cacheable("usuario")
     public Page<Usuario> index(UsuarioFilter filter, @PageableDefault(size = 5) Pageable pageable){
 
         var specification = UsuarioSpecification.withFilter(filter);
@@ -73,6 +76,7 @@ public class UsuarioController {
     )
     //----- Documentação Swagger -----
     @PostMapping
+    @CacheEvict(value = "usuario", allEntries = true)
     public ResponseEntity<Usuario> create(@RequestBody @Valid UsuarioRequestDto dto){
         log.info("Cadastrando Usuario");
 
@@ -119,6 +123,7 @@ public class UsuarioController {
     )
     //----- Documentação Swagger -----
     @PutMapping({"/{id}"})
+    @CacheEvict(value = "usuario", allEntries = true)
     public Usuario update(@PathVariable Long id, @RequestBody @Valid UsuarioRequestDto dto){
         log.info("Atualizando usuário " + dto.toString());
 
@@ -151,6 +156,7 @@ public class UsuarioController {
     )
     //----- Documentação Swagger -----
     @DeleteMapping({"/{id}"})
+    @CacheEvict(value = "usuario", allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         log.info("Apagando Usuário ID: " + id);

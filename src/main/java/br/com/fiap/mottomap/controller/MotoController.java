@@ -3,6 +3,8 @@ package br.com.fiap.mottomap.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -28,6 +30,9 @@ import br.com.fiap.mottomap.repository.FilialRepository;
 import br.com.fiap.mottomap.repository.MotoRepository;
 import br.com.fiap.mottomap.specification.MotoSpecification;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -35,7 +40,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/moto")
 @CrossOrigin
-@Tag(name = "Moto", description = "API para gerenciamento de motos no sistema da Mottu")
+@Tag(name = "Moto", description = "API para gerenciamento de motos da frota Mottu")
 public class MotoController {
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -47,15 +52,24 @@ public class MotoController {
     private FilialRepository filialRepository;
 
     //----- Documentação Swagger -----
-    @Operation(
-        summary = "Listar todos as Motos",
-        description = "Retorna uma lista com todas as motos cadastradas no sistema",
+    @Operation(summary = "Listar motos",
+        description = "Retorna uma lista paginada de motos com filtros opcionais",
+        parameters = {
+            @Parameter(name = "placa", description = "Filtro por placa (busca parcial)", example = "ABC"),
+            @Parameter(name = "chassi", description = "Filtro por chassi (exato)", example = "9BWZZZ377VT004251"),
+            @Parameter(name = "modeloMoto", description = "Filtro por modelo", example = "POP_110I"),
+            @Parameter(name = "statusMoto", description = "Filtro por status", example = "ATIVA"),
+            @Parameter(name = "page", description = "Número da página", example = "0"),
+            @Parameter(name = "size", description = "Tamanho da página", example = "5"),
+            @Parameter(name = "sort", description = "Ordenação (campo,direção)", example = "placa,asc")
+        },
         responses = {
-                @ApiResponse(responseCode = "200", description = "Lista de motos retornada com sucesso")
-        }
-    )
-    //----- Documentação Swagger -----
+            @ApiResponse(responseCode = "200", description = "Lista de motos retornada com sucesso"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+        })
+    //----- Documentação Swagger -----    
     @GetMapping
+    @Cacheable("moto")
     public Page<Moto> index(MotoFilter filter, @PageableDefault(size = 5) Pageable pageable){
 
         var specification = MotoSpecification.withFilter(filter);
@@ -63,16 +77,17 @@ public class MotoController {
     }
 
     //----- Documentação Swagger -----
-    @Operation(
-        summary = "Cadastrar Moto",
-        description = "Coleta os dados para adicionar uma moto no sistema",
+    @Operation(summary = "Cadastrar nova moto",
+        description = "Registra uma nova moto na frota da Mottu",
         responses = {
-                @ApiResponse(responseCode = "201", description = "Moto cadastrada com sucesso"),
-                @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
-        }
-    )
+            @ApiResponse(responseCode = "201", description = "Moto cadastrada com sucesso",
+                       content = @Content(schema = @Schema(implementation = Moto.class))),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
+            @ApiResponse(responseCode = "404", description = "Filial não encontrada")
+        })
     //----- Documentação Swagger -----
     @PostMapping
+    @CacheEvict(value = "moto", allEntries = true)
     public ResponseEntity<Moto> create(@RequestBody @Valid MotoRequestDto dto){
         log.info("Cadastrando Moto");
 
@@ -94,14 +109,13 @@ public class MotoController {
     }
 
     //----- Documentação Swagger -----
-    @Operation(
-        summary = "Buscar Moto por ID",
-        description = "Retorna os dados de uma moto com base no ID fornecido",
+    @Operation(summary = "Buscar moto por ID",
+        description = "Recupera os dados completos de uma moto específica",
         responses = {
-                @ApiResponse(responseCode = "200", description = "Moto encontrada"),
-                @ApiResponse(responseCode = "404", description = "Moto não encontrada")
-        }
-    )
+            @ApiResponse(responseCode = "200", description = "Dados da moto retornados",
+                       content = @Content(schema = @Schema(implementation = Moto.class))),
+            @ApiResponse(responseCode = "404", description = "Moto não encontrada")
+        })
     //----- Documentação Swagger -----
     @GetMapping({"/{id}"})
     public Moto get(@PathVariable Long id){
@@ -110,17 +124,17 @@ public class MotoController {
     }
 
     //----- Documentação Swagger -----
-    @Operation(
-        summary = "Atualizar Moto",
-        description = "Atualiza os dados de uma moto existente com base no ID fornecido",
+    @Operation(summary = "Atualizar moto",
+        description = "Atualiza os dados de uma moto existente",
         responses = {
-                @ApiResponse(responseCode = "200", description = "Moto atualizada com sucesso"),
-                @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-                @ApiResponse(responseCode = "404", description = "Moto não encontrada")
-        }
-    )
+            @ApiResponse(responseCode = "200", description = "Moto atualizada com sucesso",
+                       content = @Content(schema = @Schema(implementation = Moto.class))),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos ou filial não encontrada"),
+            @ApiResponse(responseCode = "404", description = "Moto não encontrada")
+        })
     //----- Documentação Swagger -----
     @PutMapping({"/{id}"})
+    @CacheEvict(value = "moto", allEntries = true)
     public Moto update(@PathVariable Long id, @RequestBody @Valid MotoRequestDto dto){
         log.info("Atualizando usuário " + dto.toString());
 
@@ -145,16 +159,15 @@ public class MotoController {
     }
 
     //----- Documentação Swagger -----
-    @Operation(
-        summary = "Deletar Moto",
-        description = "Remove uma moto existente com base no ID fornecido",
+    @Operation(summary = "Remover moto",
+        description = "Exclui uma moto do sistema",
         responses = {
-                @ApiResponse(responseCode = "204", description = "Moto removida com sucesso"),
-                @ApiResponse(responseCode = "404", description = "Moto não encontrada")
-        }
-    )
+            @ApiResponse(responseCode = "204", description = "Moto removida com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Moto não encontrada")
+        })
     //----- Documentação Swagger -----
     @DeleteMapping({"/{id}"})
+    @CacheEvict(value = "moto", allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         log.info("Apagando moto ID: " + id);

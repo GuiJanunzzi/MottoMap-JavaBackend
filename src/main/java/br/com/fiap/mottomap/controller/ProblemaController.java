@@ -3,6 +3,8 @@ package br.com.fiap.mottomap.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -61,6 +63,7 @@ public class ProblemaController {
     )
     //----- Documentação Swagger -----
     @GetMapping
+    @Cacheable("problema")
     public Page<Problema> index(ProblemaFilter filter, @PageableDefault(size = 5) Pageable pageable){
 
         var specification = ProblemaSpecification.withFilter(filter);
@@ -78,6 +81,7 @@ public class ProblemaController {
     )
     //----- Documentação Swagger -----
     @PostMapping
+    @CacheEvict(value = "problema", allEntries = true)
     public ResponseEntity<Problema> create(@RequestBody @Valid ProblemaRequestDto dto){
         log.info("Cadastrando Problema");
 
@@ -128,6 +132,7 @@ public class ProblemaController {
     )
     //----- Documentação Swagger -----
     @PutMapping({"/{id}"})
+    @CacheEvict(value = "problema", allEntries = true)
     public Problema update(@PathVariable Long id, @RequestBody @Valid ProblemaRequestDto dto){
         log.info("Atualizando problema " + dto.toString());
 
@@ -164,6 +169,7 @@ public class ProblemaController {
     )
     //----- Documentação Swagger -----
     @DeleteMapping({"/{id}"})
+    @CacheEvict(value = "problema", allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         log.info("Apagando Problema ID: " + id);

@@ -3,6 +3,8 @@ package br.com.fiap.mottomap.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -55,6 +57,7 @@ public class PosicaoPatioController {
     )
     //----- Documentação Swagger -----
     @GetMapping
+    @Cacheable("posicao")
     public Page<PosicaoPatio> index(PosicaoPatioFilter filter, @PageableDefault(size = 5) Pageable pageable){
 
         var specification = PosicaoPatioSpecification.withFilter(filter);
@@ -72,6 +75,7 @@ public class PosicaoPatioController {
     )
     //----- Documentação Swagger -----
     @PostMapping
+    @CacheEvict(value = "posicao", allEntries = true)
     public ResponseEntity<PosicaoPatio> create(@RequestBody @Valid PosicaoPatioRequestDto dto){
         log.info("Cadastrando Posição");
 
@@ -119,6 +123,7 @@ public class PosicaoPatioController {
     )
     //----- Documentação Swagger -----
     @PutMapping({"/{id}"})
+    @CacheEvict(value = "posicao", allEntries = true)
     public PosicaoPatio update(@PathVariable Long id, @RequestBody @Valid PosicaoPatioRequestDto dto){
         log.info("Atualizando posicao " + dto.toString());
 
@@ -152,6 +157,7 @@ public class PosicaoPatioController {
     )
     //----- Documentação Swagger -----
     @DeleteMapping({"/{id}"})
+    @CacheEvict(value = "posicao", allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         log.info("Apagando Posição ID: " + id);
