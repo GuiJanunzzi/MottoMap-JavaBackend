@@ -3,7 +3,6 @@ package br.com.fiap.mottomap.dto;
 import br.com.fiap.mottomap.model.ModeloMoto;
 import br.com.fiap.mottomap.model.StatusMoto;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;

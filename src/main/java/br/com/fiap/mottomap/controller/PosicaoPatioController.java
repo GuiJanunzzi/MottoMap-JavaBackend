@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +59,7 @@ public class PosicaoPatioController {
     //----- Documentação Swagger -----
     @GetMapping
     @Cacheable("posicao")
-    public Page<PosicaoPatio> index(PosicaoPatioFilter filter, @PageableDefault(size = 5) Pageable pageable){
+    public Page<PosicaoPatio> index(PosicaoPatioFilter filter, @PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable){
 
         var specification = PosicaoPatioSpecification.withFilter(filter);
         return repository.findAll(specification, pageable);
